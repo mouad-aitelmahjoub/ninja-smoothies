@@ -16,7 +16,7 @@ app.set("view engine", "ejs")
 // database connection
 const DB_URI = process.env.DB_URI
 mongoose
-  .connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(DB_URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err))
 

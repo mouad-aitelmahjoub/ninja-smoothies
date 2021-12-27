@@ -1,15 +1,24 @@
+import User from "../models/User.js"
+import { handleUserErrors } from "../helpers/errorHandlers.js"
+
 const signup_get = (req, res) => {
   res.render("signup")
 }
 const login_get = (req, res) => {
   res.render("login")
 }
-const signup_post = (req, res) => {
+const signup_post = async (req, res) => {
   const { email, password } = req.body
-  console.log(email, password)
-  res.send("new signup")
+
+  try {
+    const user = await User.create({ email, password })
+    res.status(201).json(user)
+  } catch (error) {
+    const errors = handleUserErrors(error)
+    res.status(400).json({ errors })
+  }
 }
-const login_post = (req, res) => {
+const login_post = async (req, res) => {
   const { email, password } = req.body
   console.log(email, password)
   res.send("user login")
