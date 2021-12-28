@@ -1,4 +1,5 @@
 import User from "../models/User.js"
+import { createToken } from "../helpers/tokens.js"
 import { handleUserErrors } from "../helpers/errorHandlers.js"
 
 const signup_get = (req, res) => {
@@ -12,7 +13,12 @@ const signup_post = async (req, res) => {
 
   try {
     const user = await User.create({ email, password })
-    res.status(201).json(user)
+    const token = createToken(user._id)
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+    })
+    res.status(201).json({ user: user._id })
   } catch (error) {
     const errors = handleUserErrors(error)
     res.status(400).json({ errors })
