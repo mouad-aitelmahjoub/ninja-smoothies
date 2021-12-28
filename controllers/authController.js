@@ -42,5 +42,9 @@ const login_post = async (req, res) => {
     res.status(400).json({ errors })
   }
 }
+const logout_get = async (req, res) => {
+  res.cookie("jwt", "", { maxAge: 1 })
+  res.redirect("/")
+}
 
-export { signup_get, signup_post, login_get, login_post }
+export { signup_get, signup_post, login_get, login_post, logout_get }
