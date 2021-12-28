@@ -26,8 +26,21 @@ const signup_post = async (req, res) => {
 }
 const login_post = async (req, res) => {
   const { email, password } = req.body
-  console.log(email, password)
-  res.send("user login")
+  try {
+    const user = await User.login(email, password)
+
+    const token = createToken(user._id)
+
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+    })
+
+    res.status(200).json({ user: user._id })
+  } catch (error) {
+    const errors = handleUserErrors(error)
+    res.status(400).json({ errors })
+  }
 }
 
 export { signup_get, signup_post, login_get, login_post }
